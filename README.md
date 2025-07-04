@@ -33,7 +33,7 @@ This suite consists of three main tools:
 1. Clone this repository:
    ```bash
    git clone <repository-url>
-   cd gemma3n-audio
+   cd gemma-3n-poc
    ```
 
 2. Run the setup script:
