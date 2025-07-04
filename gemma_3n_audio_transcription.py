@@ -89,9 +89,18 @@ class Gemma3nAudioTranscriber:
             
             # Generate transcription
             with torch.no_grad():
+                # Maximum total token length allowed (prompt + output)
+                max_length = 32768  # Gemma-3n limit
+                
+                # Estimate how many tokens the prompt is taking
+                prompt_tokens = input_ids['input_ids'].shape[-1]  # Already tokenized prompt
+                max_new_tokens = min(max_length - prompt_tokens, 1024)  # Remaining tokens for generation, capped at 1024
+                
+                print(f"Prompt tokens: {prompt_tokens}, Available for generation: {max_new_tokens}")
+                
                 outputs = self.model.generate(
                     **input_ids, 
-                    max_new_tokens=512,
+                    max_new_tokens=max_new_tokens,
                     temperature=0.1,  # Low temperature for accuracy
                     do_sample=True,
                     pad_token_id=self.processor.tokenizer.eos_token_id
@@ -167,10 +176,29 @@ def main():
     """
     Main function to run Gemma-3n audio transcription
     """
+    # Parse command line arguments
+    import argparse
+    parser = argparse.ArgumentParser(description="Transcribe audio using Gemma-3n")
+    parser.add_argument("--audio", type=str, default="/Users/vikas.bansal/Documents/personal-github/gemma3n-audio/Male Audio Sample.wav",
+                        help="Path to audio file for transcription")
+    parser.add_argument("--output", type=str, default=None,
+                        help="Path to output file (default: gemma_3n_transcription.txt in same directory as audio)")
+    parser.add_argument("--original", type=str, default="/Users/vikas.bansal/Documents/personal-github/gemma3n-audio/origal-transcript.txt",
+                        help="Path to original transcript for comparison (optional)")
+    args = parser.parse_args()
+    
     # File paths
-    audio_file = "/Users/vikas.bansal/Documents/personal-github/gemma3n-audio/Male Audio Sample.wav"
-    output_file = "/Users/vikas.bansal/Documents/personal-github/gemma3n-audio/gemma_3n_transcription.txt"
-    original_transcript_file = "/Users/vikas.bansal/Documents/personal-github/gemma3n-audio/origal-transcript.txt"
+    audio_file = args.audio
+    
+    # Set default output file if not specified
+    if args.output is None:
+        audio_dir = os.path.dirname(audio_file)
+        audio_name = os.path.splitext(os.path.basename(audio_file))[0]
+        output_file = os.path.join(audio_dir, f"{audio_name}_transcription.txt")
+    else:
+        output_file = args.output
+        
+    original_transcript_file = args.original
     
     # Check if files exist
     if not os.path.exists(audio_file):

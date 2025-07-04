@@ -1,15 +1,16 @@
-# Gemma-3n Audio Transcription
+# Gemma-3n Audio Processing Suite
 
 ## Overview
 
-This project demonstrates Google's Gemma-3n-E4B-it model's native audio processing capabilities for accurate speech-to-text transcription. It provides a clean implementation following Google's official documentation for audio processing with Gemma-3n.
+This project provides a complete end-to-end audio processing workflow using Google's Gemma-3n-E4B-it model. The suite includes tools for recording audio, transcribing speech, and generating structured meeting notes - all powered by Gemma-3n's advanced capabilities.
 
 ## Features
 
-- **Pure Gemma-3n Implementation**: Uses only the Gemma-3n-E4B-it model for audio processing
-- **High Accuracy**: Achieves 97%+ accuracy on clear audio samples
-- **Native Audio Processing**: Leverages Gemma-3n's built-in audio capabilities
-- **Easy Setup**: Simple installation process with minimal dependencies
+- **Audio Recording**: Record high-quality audio with timestamp filenames
+- **Pure Gemma-3n Transcription**: Convert speech to text with 97%+ accuracy
+- **Meeting Notes Generation**: Transform transcripts into professional meeting notes
+- **Mac GPU Acceleration**: Optimized for Apple Silicon with Metal support
+- **Command-Line Interface**: Flexible tools with customizable parameters
 
 ## Requirements
 
@@ -40,26 +41,68 @@ This project demonstrates Google's Gemma-3n-E4B-it model's native audio processi
 
 ## Usage
 
-1. Activate the virtual environment:
-   ```bash
-   source venv/bin/activate
-   ```
+### 1. Record Audio
 
-2. Run the transcription script:
-   ```bash
-   python gemma_3n_audio_transcription.py
-   ```
+Record audio from your microphone with timestamp in the filename:
 
-3. To transcribe your own audio files, modify the `audio_file` path in the `main()` function of `gemma_3n_audio_transcription.py`.
+```bash
+source venv/bin/activate
+python record_audio.py
+```
+
+Options:
+- `--duration <seconds>`: Set recording duration (default: manual stop with 'q' key)
+- `--output <directory>`: Specify output directory (default: "recordings")
+- `--rate <sample_rate>`: Set sample rate (default: 16000Hz for Gemma-3n)
+
+### 2. Transcribe Audio
+
+Transcribe audio files using Gemma-3n:
+
+```bash
+source venv/bin/activate
+python gemma_3n_audio_transcription.py --audio path/to/audio.wav
+```
+
+Options:
+- `--audio <path>`: Path to audio file (required)
+- `--output <path>`: Path for transcript output (default: auto-generated)
+- `--original <path>`: Path to original transcript for comparison (optional)
+
+### 3. Generate Meeting Notes
+
+Create structured meeting notes from transcripts:
+
+```bash
+source venv/bin/activate
+python gemma_meeting_notes.py --transcript path/to/transcript.txt
+```
+
+Options:
+- `--transcript <path>`: Path to transcript file (required)
+- `--output <path>`: Path for meeting notes output (default: auto-generated)
+- `--title <string>`: Title for the meeting notes (default: "Team Discussion Notes")
 
 ## How It Works
 
-The implementation follows Google's official approach for audio processing with Gemma-3n:
+This suite provides a complete end-to-end workflow for audio processing:
 
+### Audio Recording (`record_audio.py`)
+1. **Recording**: Captures audio from your microphone using PyAudio
+2. **Timestamp Naming**: Saves files with minute-hour-date format
+3. **Gemma-Compatible Format**: Records at 16kHz sample rate optimized for Gemma-3n
+
+### Audio Transcription (`gemma_3n_audio_transcription.py`)
 1. **Audio Loading**: The audio file is loaded and processed
 2. **Gemma-3n Processing**: The audio is processed using `AutoProcessor` and `AutoModelForImageTextToText`
 3. **Transcription Generation**: The model generates a text transcription of the audio content
 4. **Post-processing**: The output is cleaned and formatted for readability
+
+### Meeting Notes Generation (`gemma_meeting_notes.py`)
+1. **Transcript Analysis**: Gemma-3n analyzes the transcript content
+2. **Structured Generation**: Creates professional meeting notes with sections
+3. **Content Organization**: Formats into Title, Summary, Key Points, Action Items, and Next Steps
+4. **Markdown Formatting**: Outputs clean, well-formatted markdown for easy reading
 
 ## Technical Details
 
@@ -72,6 +115,22 @@ The implementation follows Google's official approach for audio processing with 
 - **Audio Format**: 16kHz sample rate recommended
 - **Output**: Clean text transcription with high accuracy
 
+## Complete Workflow Example
+
+Here's how to use the entire suite for a complete workflow:
+
+```bash
+# 1. Record a meeting
+python record_audio.py --output meetings
+# (Press 'q' to stop recording)
+
+# 2. Transcribe the recording
+python gemma_3n_audio_transcription.py --audio meetings/audio_45-14-20250704.wav
+
+# 3. Generate meeting notes from the transcript
+python gemma_meeting_notes.py --transcript meetings/audio_45-14-20250704_transcription.txt --title "Weekly Team Sync"
+```
+
 ## Sample Results
 
 For the included sample audio file, Gemma-3n produces the following transcription:
@@ -80,6 +139,28 @@ For the included sample audio file, Gemma-3n produces the following transcriptio
 The stale smell of old beer lingers. It takes heat to bring out the odor. 
 A cold dip restores health and zest. A salt pickle tastes fine with ham. 
 Tacos al pastor are my favorite. A zesty food is the hot cross bun.
+```
+
+And generates these meeting notes:
+
+```markdown
+## 1. Meeting Title: Team Discussion Notes
+
+## 2. Summary:
+This meeting involved a brief, informal discussion centered around sensory preferences – 
+specifically smells, tastes, and textures related to food. The conversation touched on 
+contrasts and personal favorites.
+
+## 3. Key Points:
+* Discussion focused on sensory experiences related to food (smell, taste).
+* Contrasting elements were highlighted (e.g., stale vs. cold beer).
+* Personal food preferences were shared (Tacos al pastor, hot cross buns).
+
+## 4. Action Items:
+* None explicitly stated. (This was a brief discussion.)
+
+## 5. Next Steps:
+* No immediate next steps are required.
 ```
 
 ## Performance

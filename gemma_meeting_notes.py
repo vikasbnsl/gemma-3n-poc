@@ -85,9 +85,18 @@ Format the notes professionally and make them concise and clear."""}
         
         # Generate meeting notes
         with torch.no_grad():
+            # Maximum total token length allowed (prompt + output)
+            max_length = 32768  # Gemma-3n limit
+            
+            # Estimate how many tokens the prompt is taking
+            prompt_tokens = inputs.shape[-1]  # Already tokenized prompt
+            max_new_tokens = min(max_length - prompt_tokens, 2048)  # Remaining tokens for generation, capped at 2048
+            
+            print(f"Prompt tokens: {prompt_tokens}, Available for generation: {max_new_tokens}")
+            
             outputs = self.model.generate(
                 inputs,
-                max_new_tokens=1024,
+                max_new_tokens=max_new_tokens,
                 temperature=0.2,  # Lower temperature for more focused output
                 do_sample=True,
                 top_p=0.9,
@@ -172,9 +181,27 @@ Format the notes professionally and make them concise and clear."""}
         return full_text[split_point:].strip()
 
 def main():
+    # Parse command line arguments
+    import argparse
+    parser = argparse.ArgumentParser(description="Generate meeting notes from transcript using Gemma-3n")
+    parser.add_argument("--transcript", type=str, default="/Users/vikas.bansal/Documents/personal-github/gemma3n-audio/gemma_3n_transcription.txt",
+                        help="Path to transcript file")
+    parser.add_argument("--output", type=str, default=None,
+                        help="Path to output file (default: meeting_notes.md in same directory as transcript)")
+    parser.add_argument("--title", type=str, default="Team Discussion Notes",
+                        help="Title for the meeting notes")
+    args = parser.parse_args()
+    
     # File paths
-    transcript_file = "/Users/vikas.bansal/Documents/personal-github/gemma3n-audio/gemma_3n_transcription.txt"
-    output_file = "/Users/vikas.bansal/Documents/personal-github/gemma3n-audio/meeting_notes.md"
+    transcript_file = args.transcript
+    
+    # Set default output file if not specified
+    if args.output is None:
+        transcript_dir = os.path.dirname(transcript_file)
+        transcript_name = os.path.splitext(os.path.basename(transcript_file))[0]
+        output_file = os.path.join(transcript_dir, f"{transcript_name}_notes.md")
+    else:
+        output_file = args.output
     
     # Check if transcript file exists
     if not os.path.exists(transcript_file):
@@ -200,7 +227,7 @@ def main():
         notes = generator.generate_meeting_notes(
             transcript, 
             output_file,
-            meeting_title="Team Discussion Notes"
+            meeting_title=args.title
         )
         
         print("\n" + "="*60)
