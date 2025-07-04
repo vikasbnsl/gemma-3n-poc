@@ -1,0 +1,15 @@
+# Core dependencies for Gemma-3n audio processing
+torch>=2.0.0
+transformers>=4.35.0
+accelerator>=0.20.0
+huggingface-hub>=0.16.0
+tokenizers>=0.14.0
+
+# Audio processing
+librosa>=0.10.0
+soundfile>=0.12.0
+ffmpeg-python>=0.2.0
+
+# Supporting libraries
+numpy>=1.24.0
+scipy>=1.10.0

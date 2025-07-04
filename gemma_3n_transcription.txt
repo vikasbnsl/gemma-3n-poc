@@ -1,0 +1,15 @@
+=== GEMMA-3N AUDIO TRANSCRIPTION ===
+
+Audio File: Male Audio Sample.wav
+Model: google/gemma-3n-E4B-it
+Processing Method: Native Gemma-3n Audio Processing
+
+TRANSCRIPTION:
+The stale smell of old beer lingers. It takes heat to bring out the odor. A cold dip restores health and zest. A salt pickle tastes fine with ham. Tacos al pastor are my favorite. A zesty food is the hot cross bun.
+
+=== TECHNICAL DETAILS ===
+Device: mps
+Audio Processing: Native Gemma-3n AutoModelForImageTextToText
+Processor: AutoProcessor with audio support
+Max Tokens: 512
+Temperature: 0.1 (for accuracy)
