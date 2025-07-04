@@ -4,6 +4,14 @@
 
 This project provides a complete end-to-end audio processing workflow using Google's Gemma-3n-E4B-it model. The suite includes tools for recording audio, transcribing speech, and generating structured meeting notes - all powered by Gemma-3n's advanced capabilities.
 
+## Tools
+
+This suite consists of three main tools:
+
+1. [**Audio Recorder**](./record_audio_README.md): Record high-quality audio with timestamp filenames
+2. [**Audio Transcription**](./transcription_README.md): Convert speech to text with Gemma-3n
+3. [**Meeting Notes Generator**](./meeting_notes_README.md): Transform transcripts into structured notes
+
 ## Features
 
 - **Audio Recording**: Record high-quality audio with timestamp filenames
@@ -41,68 +49,42 @@ This project provides a complete end-to-end audio processing workflow using Goog
 
 ## Usage
 
-### 1. Record Audio
+Each tool in the suite has its own command-line interface with various options:
 
-Record audio from your microphone with timestamp in the filename:
+### 1. [Record Audio](./record_audio_README.md)
 
 ```bash
 source venv/bin/activate
-python record_audio.py
+python record_audio.py --output meetings
 ```
 
-Options:
-- `--duration <seconds>`: Set recording duration (default: manual stop with 'q' key)
-- `--output <directory>`: Specify output directory (default: "recordings")
-- `--rate <sample_rate>`: Set sample rate (default: 16000Hz for Gemma-3n)
-
-### 2. Transcribe Audio
-
-Transcribe audio files using Gemma-3n:
+### 2. [Transcribe Audio](./transcription_README.md)
 
 ```bash
 source venv/bin/activate
 python gemma_3n_audio_transcription.py --audio path/to/audio.wav
 ```
 
-Options:
-- `--audio <path>`: Path to audio file (required)
-- `--output <path>`: Path for transcript output (default: auto-generated)
-- `--original <path>`: Path to original transcript for comparison (optional)
-
-### 3. Generate Meeting Notes
-
-Create structured meeting notes from transcripts:
+### 3. [Generate Meeting Notes](./meeting_notes_README.md)
 
 ```bash
 source venv/bin/activate
 python gemma_meeting_notes.py --transcript path/to/transcript.txt
 ```
 
-Options:
-- `--transcript <path>`: Path to transcript file (required)
-- `--output <path>`: Path for meeting notes output (default: auto-generated)
-- `--title <string>`: Title for the meeting notes (default: "Team Discussion Notes")
+For detailed command-line options and examples, please refer to the individual README files for each tool.
 
 ## How It Works
 
 This suite provides a complete end-to-end workflow for audio processing:
 
-### Audio Recording (`record_audio.py`)
-1. **Recording**: Captures audio from your microphone using PyAudio
-2. **Timestamp Naming**: Saves files with minute-hour-date format
-3. **Gemma-Compatible Format**: Records at 16kHz sample rate optimized for Gemma-3n
+1. **[Audio Recording](./record_audio_README.md)**: Record high-quality audio with timestamp filenames using PyAudio
 
-### Audio Transcription (`gemma_3n_audio_transcription.py`)
-1. **Audio Loading**: The audio file is loaded and processed
-2. **Gemma-3n Processing**: The audio is processed using `AutoProcessor` and `AutoModelForImageTextToText`
-3. **Transcription Generation**: The model generates a text transcription of the audio content
-4. **Post-processing**: The output is cleaned and formatted for readability
+2. **[Audio Transcription](./transcription_README.md)**: Process audio using Gemma-3n's native audio capabilities to generate accurate text transcriptions
 
-### Meeting Notes Generation (`gemma_meeting_notes.py`)
-1. **Transcript Analysis**: Gemma-3n analyzes the transcript content
-2. **Structured Generation**: Creates professional meeting notes with sections
-3. **Content Organization**: Formats into Title, Summary, Key Points, Action Items, and Next Steps
-4. **Markdown Formatting**: Outputs clean, well-formatted markdown for easy reading
+3. **[Meeting Notes Generation](./meeting_notes_README.md)**: Transform transcripts into structured, professional meeting notes with Gemma-3n
+
+For detailed information about each component, please refer to the linked README files.
 
 ## Technical Details
 
@@ -117,19 +99,24 @@ This suite provides a complete end-to-end workflow for audio processing:
 
 ## Complete Workflow Example
 
-Here's how to use the entire suite for a complete workflow:
+Here's how to use the entire suite for a complete end-to-end workflow:
 
 ```bash
-# 1. Record a meeting
+# 1. Record a meeting (see record_audio_README.md for more options)
 python record_audio.py --output meetings
 # (Press 'q' to stop recording)
 
-# 2. Transcribe the recording
+# 2. Transcribe the recording (see transcription_README.md for more options)
 python gemma_3n_audio_transcription.py --audio meetings/audio_45-14-20250704.wav
 
-# 3. Generate meeting notes from the transcript
+# 3. Generate meeting notes from the transcript (see meeting_notes_README.md for more options)
 python gemma_meeting_notes.py --transcript meetings/audio_45-14-20250704_transcription.txt --title "Weekly Team Sync"
 ```
+
+For detailed information about each tool, refer to the individual README files:
+- [Audio Recording Documentation](./record_audio_README.md)
+- [Audio Transcription Documentation](./transcription_README.md)
+- [Meeting Notes Documentation](./meeting_notes_README.md)
 
 ## Sample Results
 
@@ -177,7 +164,7 @@ contrasts and personal favorites.
 
 ## References
 
-- [Google AI for Developers - Audio processing with Gemma](https://ai.google.dev/gemma/docs/audio)
+- [Google AI for Developers - Audio processing with Gemma](https://ai.google.dev/gemma/docs/capabilities/audio)
 - [Hugging Face Transformers Documentation](https://huggingface.co/docs/transformers/index)
 
 ## License
