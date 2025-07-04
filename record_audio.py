@@ -139,7 +139,7 @@ def main():
     parser = argparse.ArgumentParser(description="Record audio for Gemma-3n processing")
     parser.add_argument("-d", "--duration", type=int, default=None, 
                         help="Recording duration in seconds (default: manual stop)")
-    parser.add_argument("-o", "--output", type=str, default="recordings",
+    parser.add_argument("-o", "--output", type=str, default="test",
                         help="Output directory for recordings")
     parser.add_argument("-r", "--rate", type=int, default=16000,
                         help="Sample rate (default: 16000Hz for Gemma-3n)")

@@ -103,14 +103,14 @@ Here's how to use the entire suite for a complete end-to-end workflow:
 
 ```bash
 # 1. Record a meeting (see record_audio_README.md for more options)
-python record_audio.py --output meetings
+python record_audio.py
 # (Press 'q' to stop recording)
 
 # 2. Transcribe the recording (see transcription_README.md for more options)
-python gemma_3n_audio_transcription.py --audio meetings/audio_45-14-20250704.wav
+python gemma_3n_audio_transcription.py --audio test/audio_45-14-20250704.wav
 
 # 3. Generate meeting notes from the transcript (see meeting_notes_README.md for more options)
-python gemma_meeting_notes.py --transcript meetings/audio_45-14-20250704_transcription.txt --title "Weekly Team Sync"
+python gemma_meeting_notes.py --transcript test/audio_45-14-20250704_transcription.txt --title "Weekly Team Sync"
 ```
 
 For detailed information about each tool, refer to the individual README files:

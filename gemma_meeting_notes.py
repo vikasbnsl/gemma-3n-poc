@@ -184,9 +184,9 @@ def main():
     # Parse command line arguments
     import argparse
     parser = argparse.ArgumentParser(description="Generate meeting notes from transcript using Gemma-3n")
-    parser.add_argument("--transcript", type=str, default="/Users/vikas.bansal/Documents/personal-github/gemma3n-audio/gemma_3n_transcription.txt",
+    parser.add_argument("--transcript", type=str, default="/Users/vikas.bansal/Documents/personal-github/gemma3n-audio/test/gemma_3n_transcription.txt",
                         help="Path to transcript file")
-    parser.add_argument("--output", type=str, default=None,
+    parser.add_argument("--output", type=str, default="/Users/vikas.bansal/Documents/personal-github/gemma3n-audio/test/meeting_notes.md",
                         help="Path to output file (default: meeting_notes.md in same directory as transcript)")
     parser.add_argument("--title", type=str, default="Team Discussion Notes",
                         help="Title for the meeting notes")

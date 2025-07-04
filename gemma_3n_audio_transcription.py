@@ -179,11 +179,11 @@ def main():
     # Parse command line arguments
     import argparse
     parser = argparse.ArgumentParser(description="Transcribe audio using Gemma-3n")
-    parser.add_argument("--audio", type=str, default="/Users/vikas.bansal/Documents/personal-github/gemma3n-audio/Male Audio Sample.wav",
+    parser.add_argument("--audio", type=str, default="/Users/vikas.bansal/Documents/personal-github/gemma3n-audio/test/Male Audio Sample.wav",
                         help="Path to audio file for transcription")
     parser.add_argument("--output", type=str, default=None,
                         help="Path to output file (default: gemma_3n_transcription.txt in same directory as audio)")
-    parser.add_argument("--original", type=str, default="/Users/vikas.bansal/Documents/personal-github/gemma3n-audio/origal-transcript.txt",
+    parser.add_argument("--original", type=str, default="/Users/vikas.bansal/Documents/personal-github/gemma3n-audio/test/origal-transcript.txt",
                         help="Path to original transcript for comparison (optional)")
     args = parser.parse_args()
     
