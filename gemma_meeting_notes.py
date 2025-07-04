@@ -90,7 +90,7 @@ Format the notes professionally and make them concise and clear."""}
             
             # Estimate how many tokens the prompt is taking
             prompt_tokens = inputs.shape[-1]  # Already tokenized prompt
-            max_new_tokens = min(max_length - prompt_tokens, 2048)  # Remaining tokens for generation, capped at 2048
+            max_new_tokens = max_length - prompt_tokens  # Use full remaining token capacity
             
             print(f"Prompt tokens: {prompt_tokens}, Available for generation: {max_new_tokens}")
             
