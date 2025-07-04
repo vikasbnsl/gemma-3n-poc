@@ -185,8 +185,10 @@ def main():
                         help="Path to audio file for transcription")
     parser.add_argument("--output", type=str, default=None,
                         help="Path to output file (default: gemma_3n_transcription.txt in same directory as audio)")
-    parser.add_argument("--original", type=str, default="/Users/vikas.bansal/Documents/personal-github/gemma3n-audio/test/origal-transcript.txt",
+    parser.add_argument("--original", type=str, default=None,
                         help="Path to original transcript for comparison (optional)")
+    parser.add_argument("--compare", action="store_true",
+                        help="Enable comparison with original transcript (only useful for sample audio)")
     args = parser.parse_args()
     
     # File paths
@@ -207,12 +209,19 @@ def main():
         print(f"Error: Audio file not found at {audio_file}")
         return
     
-    # Load original transcript for comparison
+    # Load original transcript for comparison if requested
     original_transcript = ""
-    if os.path.exists(original_transcript_file):
-        with open(original_transcript_file, 'r', encoding='utf-8') as f:
-            original_transcript = f.read().strip()
-        print("Original transcript loaded for comparison")
+    if args.compare:
+        # For sample audio, use default path if not specified
+        if args.original is None and "Male Audio Sample" in audio_file:
+            default_original = "/Users/vikas.bansal/Documents/personal-github/gemma3n-audio/test/original-transcript.txt"
+            if os.path.exists(default_original):
+                args.original = default_original
+        
+        if args.original and os.path.exists(args.original):
+            print("Original transcript loaded for comparison")
+            with open(args.original, 'r') as f:
+                original_transcript = f.read().strip()
     
     try:
         # Initialize transcriber
@@ -221,30 +230,28 @@ def main():
         # Transcribe audio
         result = transcriber.transcribe_audio(audio_file, output_file)
         
-        if result:
-            print("\n" + "="*60)
-            print("GEMMA-3N TRANSCRIPTION RESULT:")
-            print("="*60)
-            print(result)
-            print("="*60)
+        print("\n" + "=" * 60)
+        print("GEMMA-3N TRANSCRIPTION RESULT:")
+        print("=" * 60)
+        print(result)
+        print("=" * 60)
+        
+        # Compare with original transcript if requested and available
+        if args.compare and original_transcript:
+            print("\nORIGINAL TRANSCRIPT (for comparison):")
+            print("-" * 40)
+            print(original_transcript)
+            print("-" * 40)
             
-            # Compare with original if available
-            if original_transcript:
-                print("\nORIGINAL TRANSCRIPT (for comparison):")
-                print("-" * 40)
-                print(original_transcript)
-                print("-" * 40)
-                
-                # Simple accuracy check
-                original_words = set(original_transcript.lower().split())
-                result_words = set(result.lower().split())
-                common_words = original_words.intersection(result_words)
-                
-                if original_words:
-                    accuracy = len(common_words) / len(original_words) * 100
-                    print(f"\nWord overlap with original: {accuracy:.1f}%")
-        else:
-            print("Transcription failed!")
+            # Calculate word overlap
+            transcription_words = set(result.lower().split())
+            original_words = set(original_transcript.lower().split())
+            
+            if original_words:
+                overlap = len(transcription_words.intersection(original_words)) / len(original_words) * 100
+                print(f"\nWord overlap with original: {overlap:.1f}%")
+            else:
+                print("\nOriginal transcript is empty, cannot calculate overlap.")
             
     except Exception as e:
         print(f"Error: {str(e)}")
