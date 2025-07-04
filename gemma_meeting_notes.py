@@ -90,9 +90,10 @@ Format the notes professionally and make them concise and clear."""}
             
             # Estimate how many tokens the prompt is taking
             prompt_tokens = inputs.shape[-1]  # Already tokenized prompt
-            max_new_tokens = max_length - prompt_tokens  # Use full remaining token capacity
+            # Use a reasonable cap for meeting notes (8192 allows for detailed notes)
+            max_new_tokens = min(max_length - prompt_tokens, 8192)
             
-            print(f"Prompt tokens: {prompt_tokens}, Available for generation: {max_new_tokens}")
+            print(f"Prompt tokens: {prompt_tokens}, Available for generation: {max_new_tokens} (with 8192 token cap)")
             
             outputs = self.model.generate(
                 inputs,
@@ -100,7 +101,8 @@ Format the notes professionally and make them concise and clear."""}
                 temperature=0.2,  # Lower temperature for more focused output
                 do_sample=True,
                 top_p=0.9,
-                pad_token_id=self.tokenizer.eos_token_id
+                pad_token_id=self.tokenizer.eos_token_id,
+                max_time=180.0  # Add a 3-minute timeout
             )
         
         # Decode the generated text

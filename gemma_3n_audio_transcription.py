@@ -94,16 +94,18 @@ class Gemma3nAudioTranscriber:
                 
                 # Estimate how many tokens the prompt is taking
                 prompt_tokens = input_ids['input_ids'].shape[-1]  # Already tokenized prompt
-                max_new_tokens = max_length - prompt_tokens  # Use full remaining token capacity
+                # Use a reasonable cap for audio transcription (4096 is generous for most audio clips)
+                max_new_tokens = min(max_length - prompt_tokens, 4096)
                 
-                print(f"Prompt tokens: {prompt_tokens}, Available for generation: {max_new_tokens}")
+                print(f"Prompt tokens: {prompt_tokens}, Available for generation: {max_new_tokens} (with 4096 token cap)")
                 
                 outputs = self.model.generate(
                     **input_ids, 
                     max_new_tokens=max_new_tokens,
                     temperature=0.1,  # Low temperature for accuracy
                     do_sample=True,
-                    pad_token_id=self.processor.tokenizer.eos_token_id
+                    pad_token_id=self.processor.tokenizer.eos_token_id,
+                    max_time=120.0  # Add a 2-minute timeout
                 )
             
             # Decode output
