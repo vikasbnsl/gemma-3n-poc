@@ -17,7 +17,7 @@ python record_audio.py [options]
 
 ### Command-Line Options
 
-- `-d, --duration <seconds>`: Set recording duration (default: manual stop with 'q' key)
+- `-d, --duration <seconds>`: Set recording duration (default: manual stop with Ctrl+C)
 - `-o, --output <directory>`: Specify output directory (default: "recordings")
 - `-r, --rate <sample_rate>`: Set sample rate (default: 16000Hz for Gemma-3n)
 

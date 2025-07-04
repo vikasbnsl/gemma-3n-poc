@@ -10,7 +10,8 @@ import time
 import os
 import datetime
 import argparse
-import keyboard
+import signal
+import sys
 
 class AudioRecorder:
     def __init__(self, output_dir="recordings", format=pyaudio.paInt16, channels=1, 
@@ -47,6 +48,14 @@ class AudioRecorder:
         Returns:
             Path to saved audio file
         """
+        # Set up signal handler for Ctrl+C
+        def signal_handler(sig, frame):
+            nonlocal recording
+            recording = False
+            print("\nRecording stopped by user")
+        
+        signal.signal(signal.SIGINT, signal_handler)
+        
         # Initialize PyAudio
         audio = pyaudio.PyAudio()
         
@@ -60,7 +69,7 @@ class AudioRecorder:
         )
         
         print("\n=== Recording Started ===\n")
-        print("Press 'q' to stop recording...\n")
+        print("Press Ctrl+C to stop recording...\n")
         
         # Prepare to record
         frames = []
@@ -88,14 +97,9 @@ class AudioRecorder:
                 if elapsed >= self.max_seconds:
                     print(f"\nReached maximum recording time ({self.max_seconds} seconds)")
                     recording = False
-                
-                # Check for keyboard interrupt
-                if keyboard.is_pressed('q'):
-                    print("\nRecording stopped by user")
-                    recording = False
         
-        except KeyboardInterrupt:
-            print("\nRecording stopped by user")
+        except Exception as e:
+            print(f"\nError during recording: {str(e)}")
         
         print("\n\n=== Recording Finished ===\n")
         
