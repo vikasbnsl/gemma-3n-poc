@@ -1,0 +1,22 @@
+=== GEMMA-3N AUDIO TRANSCRIPTION ===
+
+Audio File: audio_44-21-20250704.wav
+Model: google/gemma-3n-E4B-it
+Processing Method: Native Gemma-3n Audio Processing
+
+TRANSCRIPTION:
+user
+
+
+
+
+Transcribe this audio file accurately. Provide only the spoken text.
+model
+Hi, my name is Vikas Kansal and I am working on a POC where I am creating an app that can record audio, convert it to transcript, then convert meeting notes format. It's working awesome and using Jenna 3N.
+
+=== TECHNICAL DETAILS ===
+Device: mps
+Audio Processing: Native Gemma-3n AutoModelForImageTextToText
+Processor: AutoProcessor with audio support
+Max Tokens: 512
+Temperature: 0.1 (for accuracy)
